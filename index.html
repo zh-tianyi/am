@@ -35,8 +35,10 @@
     <script>
         let startCoords = { x: 0, y: 0 };
         let isDragging = false;
-        let imagePosition = { x: -window.innerWidth*1.5*0.1, y: -window.innerHeight*1.5*0.15 }; // Initial pan position
+        let imagePosition = { x: -window.innerWidth * 1.5 * 0.1, y: -window.innerHeight * 1.5 * 0.15 }; // Initial pan position
         let currentScale = 1;
+        let initialDistance = 0;
+        let initialScale = 1;
 
         const imageContainer = document.getElementById('image-container');
         const panzoomImage = document.getElementById('panzoom-image');
@@ -99,6 +101,53 @@
 
         function getEventCoordinates(event) {
             return event.touches ? { x: event.touches[0].clientX, y: event.touches[0].clientY } : { x: event.clientX, y: event.clientY };
+        }
+
+        imageContainer.addEventListener('touchstart', startPinch);
+        imageContainer.addEventListener('touchmove', pinch);
+        imageContainer.addEventListener('touchend', stopPinch);
+
+        function startPinch(e) {
+            const touch1 = e.touches[0];
+            const touch2 = e.touches[1];
+
+            if (touch1 && touch2) {
+                initialDistance = Math.sqrt(
+                    (touch2.clientX - touch1.clientX) ** 2 + (touch2.clientY - touch1.clientY) ** 2
+                );
+                initialScale = currentScale;
+            }
+        }
+
+        function pinch(e) {
+            const touch1 = e.touches[0];
+            const touch2 = e.touches[1];
+
+            if (touch1 && touch2) {
+                const newDistance = Math.sqrt(
+                    (touch2.clientX - touch1.clientX) ** 2 + (touch2.clientY - touch1.clientY) ** 2
+                );
+                const scaleChange = (newDistance / initialDistance) * initialScale;
+
+                currentScale = Math.min(3, Math.max(1, scaleChange));
+
+                const imageCenter = {
+                    x: imageContainer.offsetWidth / 2,
+                    y: imageContainer.offsetHeight / 2
+                };
+
+                const imageCenterOffset = {
+                    x: (imageCenter.x - imagePosition.x) / initialScale,
+                    y: (imageCenter.y - imagePosition.y) / initialScale
+                };
+
+                panzoomImage.style.transform = `scale(${currentScale}) translate(${imageCenterOffset.x}px, ${imageCenterOffset.y}px)`;
+            }
+        }
+
+        function stopPinch() {
+            initialDistance = 0;
+            initialScale = 1;
         }
     </script>
 </body>
