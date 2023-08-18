@@ -78,27 +78,6 @@
             startCoords = { x: 0, y: 0 };
         }
 
-        imageContainer.addEventListener('wheel', zoom);
-
-        function zoom(e) {
-            e.preventDefault();
-            const zoomAmount = 0.1 * (e.deltaY > 0 ? -1 : 1);
-            const zoomScale = Math.max(1, Math.min(3, currentScale + zoomAmount));
-
-            const imageCenter = {
-                x: imageContainer.offsetWidth / 2,
-                y: imageContainer.offsetHeight / 2
-            };
-
-            const imageCenterOffset = {
-                x: (imageCenter.x - imagePosition.x) / currentScale,
-                y: (imageCenter.y - imagePosition.y) / currentScale
-            };
-
-            currentScale = zoomScale;
-            panzoomImage.style.transform = `scale(${currentScale}) translate(${imageCenterOffset.x}px, ${imageCenterOffset.y}px)`;
-        }
-
         function getEventCoordinates(event) {
             return event.touches ? { x: event.touches[0].clientX, y: event.touches[0].clientY } : { x: event.clientX, y: event.clientY };
         }
