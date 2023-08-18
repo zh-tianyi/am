@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #image-container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            touch-action: pan-x pan-y;
+        }
+
+        #panzoom-image {
+            width: 150%;
+            height: 150%;
+            object-fit: contain;
+            transform-origin: top left;
+            transform: translate(-10%, -15%);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="image-container">
+        <img id="panzoom-image" src="images/Seminterrato2K.png" alt="Pannable and Zoomable Image">
+    </div>
+    <script>
+        let startCoords = { x: 0, y: 0 };
+        let isDragging = false;
+        let imagePosition = { x: -window.innerWidth*1.5*0.1, y: -window.innerHeight*1.5*0.15 }; // Initial pan position
+        let currentScale = 1;
+
+        const imageContainer = document.getElementById('image-container');
+        const panzoomImage = document.getElementById('panzoom-image');
+
+        imageContainer.addEventListener('mousedown', startDrag);
+        imageContainer.addEventListener('touchstart', startDrag);
+
+        function startDrag(e) {
+            isDragging = true;
+            startCoords = getEventCoordinates(e);
+            e.preventDefault();
+        }
+
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('touchmove', drag);
+
+        function drag(e) {
+            if (!isDragging) return;
+
+            const currentCoords = getEventCoordinates(e);
+            const deltaX = currentCoords.x - startCoords.x;
+            const deltaY = currentCoords.y - startCoords.y;
+
+            imagePosition.x += deltaX / currentScale;
+            imagePosition.y += deltaY / currentScale;
+
+            panzoomImage.style.transform = `scale(${currentScale}) translate(${imagePosition.x}px, ${imagePosition.y}px)`;
+
+            startCoords = currentCoords;
+        }
+
+        document.addEventListener('mouseup', stopDrag);
+        document.addEventListener('touchend', stopDrag);
+
+        function stopDrag() {
+            isDragging = false;
+            startCoords = { x: 0, y: 0 };
+        }
+
+        imageContainer.addEventListener('wheel', zoom);
+
+        function zoom(e) {
+            e.preventDefault();
+            const zoomAmount = 0.1 * (e.deltaY > 0 ? -1 : 1);
+            const zoomScale = Math.max(1, Math.min(3, currentScale + zoomAmount));
+
+            const imageCenter = {
+                x: imageContainer.offsetWidth / 2,
+                y: imageContainer.offsetHeight / 2
+            };
+
+            const imageCenterOffset = {
+                x: (imageCenter.x - imagePosition.x) / currentScale,
+                y: (imageCenter.y - imagePosition.y) / currentScale
+            };
+
+            currentScale = zoomScale;
+            panzoomImage.style.transform = `scale(${currentScale}) translate(${imageCenterOffset.x}px, ${imageCenterOffset.y}px)`;
+        }
+
+        function getEventCoordinates(event) {
+            return event.touches ? { x: event.touches[0].clientX, y: event.touches[0].clientY } : { x: event.clientX, y: event.clientY };
+        }
+    </script>
+</body>
+</html>
