@@ -25,12 +25,63 @@
             transform-origin: top left;
             transform: translate(-10%, -15%);
         }
+
+        #panzoom-image2 {
+            width: 150%;
+            height: 150%;
+            object-fit: contain;
+            transform-origin: top left;
+            transform: translate(-10%, -15%);
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #panzoom-image3 {
+            width: 150%;
+            height: 150%;
+            object-fit: contain;
+            transform-origin: top left;
+            transform: translate(-10%, -15%);
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #panzoom-image4 {
+            width: 150%;
+            height: 150%;
+            object-fit: contain;
+            transform-origin: top left;
+            transform: translate(-10%, -15%);
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #panzoom-image5 {
+            width: 150%;
+            height: 150%;
+            object-fit: contain;
+            transform-origin: top left;
+            transform: translate(-10%, -15%);
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
     </style>
 </head>
 
 <body>
     <div id="image-container">
-        <img id="panzoom-image" src="images/Seminterrato2K.png" alt="Pannable and Zoomable Image">
+        <img id="panzoom-image" src="images/Base2K.png" alt="Pannable and Zoomable Image">
+        <img id="panzoom-image2" src="images/Seminterrato2K.png" alt="Another Pannable and Zoomable Image">
+        <img id="panzoom-image3" src="images/Rialzato2K.png" alt="Another Pannable and Zoomable Image">
+        <img id="panzoom-image4" src="images/Primo2K.png" alt="Another Pannable and Zoomable Image">
+        <img id="panzoom-image5" src="images/Secondo2K.png" alt="Another Pannable and Zoomable Image">
+
+    </div>
     </div>
     <script>
         let startCoords = { x: 0, y: 0 };
@@ -66,6 +117,10 @@
             imagePosition.y += deltaY / currentScale;
 
             panzoomImage.style.transform = `scale(${currentScale}) translate(${imagePosition.x}px, ${imagePosition.y}px)`;
+            panzoomImage2.style.transform = panzoomImage.style.transform;
+            panzoomImage3.style.transform = panzoomImage.style.transform;
+            panzoomImage4.style.transform = panzoomImage.style.transform;
+            panzoomImage5.style.transform = panzoomImage.style.transform;
 
             startCoords = currentCoords;
         }
@@ -128,6 +183,12 @@
             initialDistance = 0;
             initialScale = 1;
         }
+
+        const panzoomImage2 = document.getElementById('panzoom-image2');
+        const panzoomImage3 = document.getElementById('panzoom-image3');
+        const panzoomImage4 = document.getElementById('panzoom-image4');
+        const panzoomImage5 = document.getElementById('panzoom-image5');
+
     </script>
 </body>
 </html>
